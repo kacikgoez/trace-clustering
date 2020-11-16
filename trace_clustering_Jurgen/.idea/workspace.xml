@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c4887b69-c71a-4bb1-8ce0-950951a97d90" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1kGFN0RL5eJ2iPDQJnQQ6L4O4db" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
+    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/.." />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/classes" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.main">
+    <configuration name="SelectSampleLog" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="trace" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SelectSampleLog.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="fsp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="trace" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/classes/fsp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="trace" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.fsp" />
+        <item itemvalue="Python.SelectSampleLog" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c4887b69-c71a-4bb1-8ce0-950951a97d90" name="Default Changelist" comment="" />
+      <created>1605318979942</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1605318979942</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="425" y="251" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1605387980908">
+      <screen x="0" y="25" width="1440" height="813" />
+    </state>
+    <state x="425" y="251" key="#com.intellij.fileTypes.FileTypeChooser/0.25.1440.813@0.25.1440.813" timestamp="1605387980908" />
+    <state width="1329" height="196" key="GridCell.Tab.0.bottom" timestamp="1605551111770">
+      <screen x="0" y="25" width="1440" height="818" />
+    </state>
+    <state width="1419" height="205" key="GridCell.Tab.0.bottom/0.25.1440.813@0.25.1440.813" timestamp="1605388182512" />
+    <state width="1419" height="205" key="GridCell.Tab.0.bottom/0.25.1440.814@0.25.1440.814" timestamp="1605366448636" />
+    <state width="1419" height="205" key="GridCell.Tab.0.bottom/0.25.1440.815@0.25.1440.815" timestamp="1605456456829" />
+    <state width="1419" height="205" key="GridCell.Tab.0.bottom/0.25.1440.817@0.25.1440.817" timestamp="1605403698286" />
+    <state width="1329" height="196" key="GridCell.Tab.0.bottom/0.25.1440.818@0.25.1440.818" timestamp="1605551111770" />
+    <state width="1329" height="205" key="GridCell.Tab.0.bottom/0.25.1440.820@0.25.1440.820" timestamp="1605537415932" />
+    <state width="1329" height="196" key="GridCell.Tab.0.center" timestamp="1605551111769">
+      <screen x="0" y="25" width="1440" height="818" />
+    </state>
+    <state width="1419" height="205" key="GridCell.Tab.0.center/0.25.1440.813@0.25.1440.813" timestamp="1605388182511" />
+    <state width="1419" height="205" key="GridCell.Tab.0.center/0.25.1440.814@0.25.1440.814" timestamp="1605366448635" />
+    <state width="1419" height="205" key="GridCell.Tab.0.center/0.25.1440.815@0.25.1440.815" timestamp="1605456456827" />
+    <state width="1419" height="205" key="GridCell.Tab.0.center/0.25.1440.817@0.25.1440.817" timestamp="1605403698284" />
+    <state width="1329" height="196" key="GridCell.Tab.0.center/0.25.1440.818@0.25.1440.818" timestamp="1605551111769" />
+    <state width="1329" height="205" key="GridCell.Tab.0.center/0.25.1440.820@0.25.1440.820" timestamp="1605537415930" />
+    <state width="1329" height="196" key="GridCell.Tab.0.left" timestamp="1605551111769">
+      <screen x="0" y="25" width="1440" height="818" />
+    </state>
+    <state width="1419" height="205" key="GridCell.Tab.0.left/0.25.1440.813@0.25.1440.813" timestamp="1605388182510" />
+    <state width="1419" height="205" key="GridCell.Tab.0.left/0.25.1440.814@0.25.1440.814" timestamp="1605366448635" />
+    <state width="1419" height="205" key="GridCell.Tab.0.left/0.25.1440.815@0.25.1440.815" timestamp="1605456456826" />
+    <state width="1419" height="205" key="GridCell.Tab.0.left/0.25.1440.817@0.25.1440.817" timestamp="1605403698283" />
+    <state width="1329" height="196" key="GridCell.Tab.0.left/0.25.1440.818@0.25.1440.818" timestamp="1605551111769" />
+    <state width="1329" height="205" key="GridCell.Tab.0.left/0.25.1440.820@0.25.1440.820" timestamp="1605537415930" />
+    <state width="1329" height="196" key="GridCell.Tab.0.right" timestamp="1605551111770">
+      <screen x="0" y="25" width="1440" height="818" />
+    </state>
+    <state width="1419" height="205" key="GridCell.Tab.0.right/0.25.1440.813@0.25.1440.813" timestamp="1605388182511" />
+    <state width="1419" height="205" key="GridCell.Tab.0.right/0.25.1440.814@0.25.1440.814" timestamp="1605366448636" />
+    <state width="1419" height="205" key="GridCell.Tab.0.right/0.25.1440.815@0.25.1440.815" timestamp="1605456456828" />
+    <state width="1419" height="205" key="GridCell.Tab.0.right/0.25.1440.817@0.25.1440.817" timestamp="1605403698285" />
+    <state width="1329" height="196" key="GridCell.Tab.0.right/0.25.1440.818@0.25.1440.818" timestamp="1605551111770" />
+    <state width="1329" height="205" key="GridCell.Tab.0.right/0.25.1440.820@0.25.1440.820" timestamp="1605537415931" />
+    <state x="434" y="89" width="602" height="735" key="find.popup" timestamp="1605441482011">
+      <screen x="0" y="25" width="1440" height="815" />
+    </state>
+    <state x="434" y="89" width="602" height="735" key="find.popup/0.25.1440.815@0.25.1440.815" timestamp="1605441482011" />
+    <state x="446" y="345" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1605549905226">
+      <screen x="0" y="25" width="1440" height="819" />
+    </state>
+    <state x="446" y="345" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.25.1440.819@0.25.1440.819" timestamp="1605549905226" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>9</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
