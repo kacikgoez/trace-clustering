@@ -1,0 +1,1 @@
+This folder will contain SPMF output for all the processed files
