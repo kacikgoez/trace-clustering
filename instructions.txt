@@ -1,0 +1,35 @@
+Backend: 
+	(Juergen) FSP:
+		input: (array) algos, (2d array) params, (array) thresholds 
+		output: (array) spmf_algo_output
+	(Tong) __init__: (Apply TrainingData class here) 
+		input: file, (array) sample set
+		output: (2d array) cluster, XES files containing cluster
+	(Tong) Frequency:
+		input: (array) spmf_pattern, (array) trace
+		output: 
+(2d array) if_occurs,  //Array that contains information about the occurance of a pattern in a specific 			     trace (bool array) 
+	(Kawa) Measurements:
+		input: (2d array) sample set, (array) cluster
+		output: recall, f1 measure, precision 
+	(Kawa) TrainingData:
+		input: (2d array) sample set
+		output: (2d array) random subset
+	(Juergen) Score:
+		input: (Frequency output)
+		output: (2d array) comparison_table (compare occurance of algos) 
+
+Front-End:  
+(Kawa)		Upload:
+		input: file
+		output: Redirect
+(Zohrali)	Table:
+		input: selection, attributes of labeling function, 4x thresholds,
+
+(Zohrali) 	Measurements:
+		output: recall, ..., FSPs, download XES files (Cluster)
+
+Question: 
+	UnitTesting - How should we approach it 
+
+
