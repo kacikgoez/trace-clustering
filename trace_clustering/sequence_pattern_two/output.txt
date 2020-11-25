@@ -1,0 +1,8 @@
+A | C | #SUP: 3
+A | D | #SUP: 3
+A | E | #SUP: 3
+A | F | #SUP: 3
+C | D | #SUP: 3
+C | F | #SUP: 3
+D | F | #SUP: 3
+E | F | #SUP: 3
