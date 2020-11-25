@@ -1,75 +1,78 @@
 import os
-from pathlib import Path
 from spmf import Spmf
-from pm4py.objects.log.importer.xes import importer as xes_importer
 import itertools
+from pathlib import Path
+
 
 class FSP:
-    #filename without ext
-    def __init__(self, file_path, supportThreshold):
-        global fpath
-        global log
-        spmf_path = Path(file_path)
-        fpath = os.path.join(str(spmf_path.parent), "processed")
-        log = xes_importer.apply(file_path)
-        filename = os.path.basename(file_path)
-        self.file_format_to_pm4py_input("Activity", (filename + ".txt"))
-        spmf = Spmf("CloFast", input_filename=(os.path.join(fpath, (filename + ".txt"))),
-                output_filename=(os.path.join(fpath, "output", (filename + ".txt"))), arguments=[supportThreshold])
-        spmf.run()
 
+    """
+    file_path - path of one of the sequence_pattern_dir
+    """
+    def __init__(self, file_path, algorithm_name, sample_set_labeling, arguments):
+        self.cur_path = Path(file_path)
+        self.spmf_jar_path = Path(file_path)
+        self.input_file = self.write_text_input_file(sample_set_labeling, file_path)
+        self.spmf = Spmf(algorithm_name, input_filename=self.input_file,
+                         output_filename=os.path.join(file_path, 'output.txt'), arguments=arguments,
+                         spmf_bin_location_dir=str(self.spmf_jar_path.parent))
+        self.spmf.run()
+        self.result = self.output_to_array(os.path.join(file_path, 'output.txt'))
 
     """This function writes a .txt file to"""
-    def write_text_input_file(self, eventlogLabeling):
-        file = open('../input.txt', 'w+')
-        file.write('@CONVERTED_FROM_TEXT\n')
-        d = self.mapping_dict(eventlogLabeling)
+    def write_text_input_file(self, sample_set_labeling, file_path):
+        with open(os.path.join(file_path, "input.txt"), "w+") as file:
+            file.write('@CONVERTED_FROM_TEXT\n')
+            d = self.mapping_dict(sample_set_labeling)
 
-        for i in list(d.keys()):
-            string = '@ITEM=' + str(d[i]) + '=' + str(i) + '\n'
-            file.write(string)
+            for i in list(d.keys()):
+                temp_string = '@ITEM=' + str(d[i]) + '=' + str(i) + '\n'
+                file.write(temp_string)
 
-        file.write('@ITEM=-1=|\n')
+            file.write('@ITEM=-1=|\n')
 
-        helpList = self.mapping(eventlogLabeling)
-        for i in range(len(helpList)):
-            helpString = ''
-            for j in range(len(helpList[i])):
-                helpString = helpString + str(helpList[i][j]) + ' -1 '
-            helpString = helpString + '-2 \n'
-            file.write(helpString)
+            help_list = self.mapping(sample_set_labeling)
+            for i in range(len(help_list)):
+                help_string = ''
+                for j in range(len(help_list[i])):
+                    help_string = help_string + str(help_list[i][j]) + ' -1 '
+                help_string = help_string + '-2 \n'
+                file.write(help_string)
 
-        return file
+            file.close()
 
-    def output_to_array(self, output):
-        a_file = open(output, 'r')
+        return os.path.join(file_path, "input.txt")
 
-        list_of_list = []
-        for line in a_file:
-            stripped_line = line.strip()
-            if '-2' not in stripped_line:
-                res = stripped_line.partition(' | #SUP:')[0]
-            else:
-                res = stripped_line.partition(' | -2')[0]
-            line_list = res.split(' | ')
-            list_of_list.append(line_list)
-
-        a_file.close()
-        return list_of_list
-
-    def mapping_dict(self, eventlogLabeling):
-        merged = list(itertools.chain.from_iterable(eventlogLabeling))
+    @staticmethod
+    def mapping_dict(eventlog_labeling):
+        merged = list(itertools.chain.from_iterable(eventlog_labeling))
         d = dict([(y, x + 1) for x, y in enumerate(sorted(set(merged)))])
         return d
 
-
-    def mapping(self, eventlogLabeling):
-        helpList = list()
-        merged = list(itertools.chain.from_iterable(eventlogLabeling))
+    @staticmethod
+    def mapping(eventlog_labeling):
+        help_list = list()
+        merged = list(itertools.chain.from_iterable(eventlog_labeling))
         d = dict([(y, x + 1) for x, y in enumerate(sorted(set(merged)))])
-        for i in range(len(eventlogLabeling)):
-            helpList.append([d[x] for x in eventlogLabeling[i]])
-        return helpList
+        for i in range(len(eventlog_labeling)):
+            help_list.append([d[x] for x in eventlog_labeling[i]])
+        return help_list
+
+    @staticmethod
+    def output_to_array(output):
+        with open(output, "r") as a_file:
+            list_of_list = []
+            for line in a_file:
+                stripped_line = line.strip()
+                if '-2' not in stripped_line:
+                    res = stripped_line.partition(' | #SUP:')[0]
+                else:
+                    res = stripped_line.partition(' | -2')[0]
+                line_list = res.split(' | ')
+                list_of_list.append(line_list)
+
+            a_file.close()
+            return list_of_list
 
     def get_result(self):
         return self.result
@@ -77,47 +80,3 @@ class FSP:
     def get_amount(self):
         return len(self.result)
 
-    #Returns a list with the corresponding match of attribute value to integer
-    def file_numerize_attribute(self, attrName):
-        res_list = {}
-        count = 0
-        for trace in log:
-            for entry in trace:
-                if entry[attrName] not in res_list:
-                    res_list[entry[attrName]] = count
-                    count += 1
-        return res_list
-
-    #Turns attributes into numbers and keeps them in sequence
-    #Example: move left -> move right -> move left -> move up
-    #Output: 0 -> 1 -> 0 -> 2 
-    def file_trace_to_numbers(self, attrName):
-        res_array = []
-        num_dict = self.file_numerize_attribute(attrName)
-        for i in range (len(log)):
-            res_array.append([])
-            for j in range(len(log[i])):
-                entry = log[i][j]
-                res_array[i].append(num_dict[entry[attrName]])
-        return res_array
-
-    def file_numerize_attribute(self, attrName):
-        res_list = {}
-        count = 0
-        for trace in log:
-            for entry in trace:
-                if entry[attrName] not in res_list:
-                    res_list[entry[attrName]] = count
-                    count += 1
-        return res_list
-
-    def file_format_to_pm4py_input(self, attrName, filename_out):
-        inpt = self.file_trace_to_numbers(attrName)
-        result = ""
-        for i in inpt:
-            for j in i:
-                result += str(j) + " "
-            result += "-2\n"
-        with open(os.path.join(fpath, filename_out), "w") as f:
-            f.write(result)
-            f.close()
