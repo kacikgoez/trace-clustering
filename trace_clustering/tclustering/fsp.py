@@ -11,7 +11,7 @@ class FSP:
         global log
         spmf_path = Path(file_path)
         fpath = os.path.join(str(spmf_path.parent), "processed")
-        log = xes_importer.apply(file_path);
+        log = xes_importer.apply(file_path)
         filename = os.path.basename(file_path)
         self.file_format_to_pm4py_input("Activity", (filename + ".txt"))
         spmf = Spmf("CloFast", input_filename=(os.path.join(fpath, (filename + ".txt"))),
