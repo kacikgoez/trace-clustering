@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Trace Clustering</title>
+	<style type="text/css">
+
+		body {
+			font-family: Arial;
+		}
+
+		#nav {
+			display: block;
+			position: fixed;
+			left: 0px;
+			top: 0px;
+			bottom: 0px;
+			width: 15%;
+			background-color: #FFF;
+		}
+
+		#nav-list {
+			padding: 0px;
+			margin: 0px;
+			list-style-type: none;
+		}
+
+		#nav-list li {
+			width: 100%;
+			height: 30px;
+			padding: 10px 0px; 
+			cursor: pointer;
+		}
+
+		#nav-list li:nth-child(odd) {
+			background-color: #F8F8F8;
+		}
+
+		#nav-list li:hover {
+			background-color: #DDD;
+		}
+
+		#frame {
+			position: fixed;
+			top: 0px;
+			right: 0px;
+			bottom: 0px;
+			width: 85%;
+			height: 100%;
+			border: 0px;
+		}
+
+	</style>
+</head>
+<body>
+	<nav id="nav">
+		<center>
+			<h3 id="nav-title">Navigation</h3>
+			<ul id="nav-list">
+				<li data-page="/sample">Samples</li>
+				<li data-page="/error">Results</li>
+				<li data-page="/sample">Page</li>
+				<li data-page="/error">Another page</li>
+			</ul>
+		</center>
+	</nav>
+	<iframe id="frame" src="/sample">	
+	</iframe>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$(document).on('click', '#nav-list li', function(event) {
+				$("#frame").attr("src", $(event.target).attr("data-page"));
+			});
+		});
+	</script>
+</body>
+</html>

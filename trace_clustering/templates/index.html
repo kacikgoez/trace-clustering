@@ -1,67 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Trace Clustering</title>
-	<style type="text/css">
+  <title>Trace Clustering</title>
+  <style type="text/css">
 
-		body {
-			font-family: Arial;
-		}
-		
-		#upload-form * {
-			position: relative;
-			display: block;
-			border: 1px solid #ccc;
-			margin: 8px;
-		    padding: 6px 12px;
-		    width: 200px;
-		    cursor: pointer;
-		}
+    body {
+      font-family: Arial;
+    }
+    
+    #upload-form * {
+      position: relative;
+      display: block;
+      border: 1px solid #ccc;
+      margin: 8px;
+        padding: 6px 12px;
+        width: 200px;
+        cursor: pointer;
+    }
 
-		#custom-file-submit {
-			display: none;
-		}
+    #custom-file-submit {
+      display: none;
+    }
 
-		input[type=submit] {
-		    display: none !important;
-		}
-	
-		input[type=file] {
-		    display: none !important;
-		}
+    input[type=submit] {
+        display: none !important;
+    }
+  
+    input[type=file] {
+        display: none !important;
+    }
 
-	</style>
+  </style>
 </head>
 <body>
-	<center>
-		<h1 id="title">Trace Clustering</h1>
-		<form action="/upload" method="POST" id="upload-form" enctype="multipart/form-data">
-			<input type="text" name="clofast_treshold" placeholder="CloFAST threshold">
-			<input type="text" name="one_treshold" placeholder="FSP 1 threshold">
-			<input type="text" name="two_treshold" placeholder="FSP 2 threshold">
-			<label for="file-upload" id="custom-file-upload">
-			    Choose XES file
-			</label>
-			<input id="file-upload" type="file" name="file" onchange="fileCheck()" accept=".xes"/>
-			<label for="file-submit" id="custom-file-submit">
-			    Upload file
-			</label>
-			<input id="file-submit" type="submit" name="submit" value="Upload file"/>
-		</form>
-	</center>
+  <center>
+    <h1 id="title">Trace Clustering</h1>
+    <form action="/upload" method="POST" id="upload-form" enctype="multipart/form-data">
+      <label for="file-upload" id="custom-file-upload">
+          Choose XES file
+      </label>
+      <input id="file-upload" type="file" name="file" onchange="fileCheck()" accept=".xes"/>
+      <label for="file-submit" id="custom-file-submit">
+          Upload file
+      </label>
+      <input id="file-submit" type="submit" name="submit" value="Upload file"/>
+    </form>
+  </center>
 </body>
 <script type="text/javascript">
-	
-	function fileCheck(){
-		var file = document.getElementById("file-upload");
-		if(file.value != ""){
-			document.getElementById("custom-file-upload").style.backgroundColor = "#AAFFAA";
-			document.getElementById("custom-file-upload").innerHTML = "Choose different XES file";
-			document.getElementById("custom-file-submit").style.display = "block";
-		} else {
-			document.getElementById("custom-file-submit").style.display = "none";
-		}
-	}
+  
+  function fileCheck(){
+    var file = document.getElementById("file-upload");
+    if(file.value != ""){
+      document.getElementById("custom-file-upload").style.backgroundColor = "#AAFFAA";
+      document.getElementById("custom-file-upload").innerHTML = "Choose different XES file";
+      document.getElementById("custom-file-submit").style.display = "block";
+    } else {
+      document.getElementById("custom-file-submit").style.display = "none";
+    }
+  }
 
 </script>
 </html>

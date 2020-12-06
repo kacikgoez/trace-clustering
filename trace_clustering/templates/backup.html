@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<style type="text/css">
+
+		body {
+			margin-top: 100px;
+			margin-bottom: 100px;
+		}
+
+		.row {
+			margin: 40px 0px;
+		}
+
+		#navbar {
+			position: fixed;
+			top: 0px;
+			right: 0px;
+			left: 1px;
+			height: 60px;
+			background-color: #FFF;
+			box-shadow:  0px 4px  5px #CCC;
+			z-index: 999;
+		}
+		
+		#custom-file-submit {
+			display: none;
+		}
+
+		#label {
+			border: 1px solid #AAA;
+		}
+
+		#labelfunc {
+			margin: 0px;
+		}
+
+		#label th {
+			cursor: pointer;
+		}
+
+		input[type=number] {
+		    display: inline-block;
+		    width: 200px;
+		    padding: 5px;
+		    margin: 5px;
+		    vertical-align: middle;
+		}
+		
+		/*table {
+			margin: 10px 0px;
+			width: 500px;
+		}
+
+		td, th {
+			border: 1px solid black;
+			padding: 5px;
+			margin: 0px;
+		}
+
+		th {
+			background-color: #FFDDDD;
+		}*/
+
+		.table-fixed {
+			box-shadow: 0px 0px 10px #AAA;
+
+		    margin-bottom: 60px;
+		    padding: 5px;
+		}
+
+		.table-fixed tbody {
+		    height: 300px;
+		    overflow-y: auto;
+		    width: 100%;
+		}
+
+		.table-fixed thead,
+		.table-fixed tbody,
+		.table-fixed tr,
+		.table-fixed td,
+		.table-fixed th {
+		    display: block;
+		}
+
+		.table-fixed tbody td,
+		.table-fixed tbody th,
+		.table-fixed thead > tr > th {
+		    float: left;
+		    position: relative;
+		}
+
+
+		#footer {
+			position: fixed;
+			bottom: 0px;
+			right: 0px;
+			left: 1px;
+			height: 60px;
+			background-color: #FFF;
+			box-shadow:  0px -4px  5px #CCC;
+			z-index: 999;
+		}
+
+		#footer * {
+			margin: 10px;
+		}
+
+	</style>
+</head>
+<body>
+	<nav id="navbar">
+		<center>
+			<input type="number" id="clofast" name="clofast" placeholder="CloFast threshold [0,1]" min="0" max="1" step="0.01">
+			<input type="number" id="len1" name="len1" placeholder="SPAM len. 1 threshold [0,1]" min="0" max="1"  step="0.01">
+			<input type="number" id="len2" name="len2" placeholder="SPAM len. 2 threshold [0,1]" min="0" max="1"  step="0.01">
+		</center>
+	</nav>
+	<main>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<h1 id="title">Trace Clustering</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<h4>Select the attributes of the labeling function by clicking</h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<div id="label"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<h4 id="title">Select sampling set</h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<div id="table" class="table-reponsive">
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<footer id="footer">
+		<center>
+			<button type="button" class="btn btn-success" id="submit">Success</button>
+		</center>
+		</footer>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+		
+			$.get("/table/json", function(data){
+				displayTable(data);
+			});
+
+			$(document).on('click', '.markable', function(event) {
+				console.log(1)
+				var table = $(event.target).closest("table");
+			 	if(table.attr("data-selected") == "false"){
+					table.css("background-color", "#DDFFDD");
+					table.attr("data-selected", "true");  
+				} else {
+					table.css("background-color", "#FFFFFF");
+					table.attr("data-selected", "false");  
+				}
+			});
+
+			$(document).on('click', '#label th', function(event) {
+				if($(event.target).attr("data-marked") == undefined || $(event.target).attr("data-marked") == "false"){
+					$(event.target).attr("data-marked", "true");
+					$(event.target).css("background-color", "#DDFFDD");
+				} else {
+					$(event.target).attr("data-marked", "false");
+					$(event.target).css("background-color", "#FFF");
+				}
+			});
+
+			$("#submit").click(function(){
+				var marked = [];
+				var m_labels = [];
+				var thresholds = {};
+
+				var tables = $("table[data-selected='true']");
+				var labels = $("th[data-marked='true']");
+
+				for(var i = 0; i < tables.length; i++){
+					marked.push($(tables[i]).attr("nth-element"));
+				}
+
+				for(var i = 0; i < labels.length; i++){
+					m_labels.push($(labels[i]).text());
+				}
+
+				thresholds["clofast"] = $("#clofast").val();
+				thresholds["len1"] = $("#len1").val();
+				thresholds["len2"] = $("#len2").val();
+
+				if(m_labels.length == 0){
+					alert("Please select at least one attribute for the labeling function");
+					return 0;
+				}
+
+				if(marked.length == 0){
+					alert("Please select at least one sample");
+					return 0;
+				}
+
+				var data = {
+					"selected" : JSON.stringify(marked),
+					"thresholds" : JSON.stringify(thresholds),
+					"labels" : JSON.stringify(m_labels)
+				};
+				
+				$.ajax({
+				  type: "POST",
+				  url: "/sample",
+				  data: data,
+				  success: function(data){
+				  	alert(data);
+				  }
+				});
+			});
+
+			function displayTable(log){
+				var table = document.createElement("table");
+				table.setAttribute("class", "table");
+				var labels = document.createElement("thead");
+				var labels = document.createElement("tr");
+				if(log.length > 0){
+					for (var act in log[0][0]){
+						var th = document.createElement("th");
+						$(th).text(act);
+						labels.appendChild(th)
+					}
+				}
+
+				var label = table;
+				label.setAttribute("id", "labelfunc");
+				label.appendChild(labels);
+				$("#label").append(table);
+
+				var i = 0;
+
+				for(trace in log){
+					var table = document.createElement("table");
+					table.setAttribute("class", "markable table table-fixed");
+					table.setAttribute("nth-element", i++);
+					table.setAttribute("data-selected", "false");
+					var thead = document.createElement("thead");
+					var labels = document.createElement("tr");
+
+					if(log.length > 0){
+						for (var act in log[0][0]){
+							var th = document.createElement("th");
+							th.setAttribute("class", "col-2");
+							$(th).text(act);
+							labels.appendChild(th)
+						}
+					}
+
+					thead.append(labels)
+					table.appendChild(thead);
+					var tbody = document.createElement("tbody");
+
+					for(evnt in log[trace]){
+						var row = document.createElement("tr");
+						for (var act in log[trace][evnt]){
+							var td = document.createElement("td");
+							td.setAttribute("class", "col-2");
+							$(td).text(log[trace][evnt][act]);
+							row.appendChild(td)	
+						}
+						tbody.appendChild(row)
+					}
+
+					table.append(tbody);
+					$("#table").append(table);
+				}
+			}
+
+		});
+	</script>
+</body>
+</html>

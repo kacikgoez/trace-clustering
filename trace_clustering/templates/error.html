@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Trace Clustering</title>
+	<style type="text/css">
+
+		body {
+			font-family: Arial;
+		}
+		
+		#upload-form * {
+			position: relative;
+			display: block;
+			border: 1px solid #ccc;
+			margin: 8px;
+		    padding: 6px 12px;
+		    width: 200px;
+		    cursor: pointer;
+		}
+
+		#custom-file-submit {
+			display: none;
+		}
+
+		input[type=submit] {
+		    display: none !important;
+		}
+	
+		input[type=file] {
+		    display: none !important;
+		}
+
+	</style>
+</head>
+<body>
+	<center>
+		<h1 id="title">Error</h1>
+		Some kind of error occured, make sure you have cookies and JavaScript enabled.
+		<br>
+		<br>
+		You will be redirected soon, if not, <a href="/"> click here </a>
+	</center>
+</body>
+<script type="text/javascript">
+	window.setTimeout(function(){
+        window.location.href = "/";
+    }, 7500);
+</script>
+</html>
