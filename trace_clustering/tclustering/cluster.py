@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from pm4py.objects.log.importer.xes import importer as xes_importer
 from pm4py.objects.log.util import func
 from tclustering.fsp import FSP
@@ -25,25 +26,27 @@ class Cluster:
                     third element - threshold of the closed sequence pattern
     """
 
-    def __init__(self, log, traces, labeling_attributes, support, algorithm_names, threshold_score):
-        eventlog = xes_importer.apply(log)
-        sample_set = SampleSet(eventlog, traces)
+    def __init__(self, log, traces, file_path, labeling_attributes, support, algorithm_names):
+        self.eventlog = xes_importer.apply(log)
+        sample_set = SampleSet(self.eventlog, traces)
         training_set = TrainingSet(sample_set.get_sample_set())
         self.labeling_training_set = Labeling(training_set.get_training_set(), labeling_attributes)
-        self.labeling_eventlog = Labeling(eventlog, labeling_attributes)
-        sp_len_one = FSP('/Users/lentz/Desktop/trace-clustering/trace_clustering/training', algorithm_names[0],
-                         self.labeling_training_set.get_eventlog_label(), [support, 1, 1])
-        sp_len_two = FSP('/Users/lentz/Desktop/trace-clustering/trace_clustering/training', algorithm_names[1],
-                         self.labeling_training_set.get_eventlog_label(), [support, 2, 2])
-        sp_clo = FSP('/Users/lentz/Desktop/trace-clustering/trace_clustering/training', algorithm_names[2],
-                     self.labeling_training_set.get_eventlog_label(), [support])
+        self.labeling_eventlog = Labeling(self.eventlog, labeling_attributes)
+        sp_len_one = FSP(file_path, algorithm_names[0],
+                         self.labeling_training_set.get_eventlog_label(), Path(log).name, [support, 1, 1])
+        sp_len_two = FSP(file_path, algorithm_names[1],
+                         self.labeling_training_set.get_eventlog_label(), Path(log).name, [support, 2, 2])
+        sp_clo = FSP(file_path, algorithm_names[2],
+                     self.labeling_training_set.get_eventlog_label(), Path(log).name, [support])
         self.pattern_len_one = sp_len_one.get_result()
         self.pattern_len_two = sp_len_two.get_result()
         self.pattern_clo = sp_clo.get_result()
         self.pattern = [self.pattern_len_one, self.pattern_len_two, self.pattern_clo]
-        self.clustering = self.choose(eventlog,
-                                      in_cluster(self.pattern,
-                                                 self.labeling_eventlog.get_eventlog_label(), threshold_score))
+
+    def get_clustering(self, threshold_score):
+        clustering = self.choose(self.eventlog, in_cluster(self.pattern, self.labeling_eventlog.get_eventlog_label(),
+                                                           threshold_score))
+        return clustering
 
     @staticmethod
     def get_log_as_array(path):
