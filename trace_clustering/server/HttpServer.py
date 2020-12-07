@@ -108,7 +108,7 @@ def check_file_type(filename):
 
 def form_isset(key):
     try:
-        value = request.form.get(key)
+        # value = request.form.get(key)
         return True
     except KeyError:
         return False
