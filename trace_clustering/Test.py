@@ -8,7 +8,8 @@ from tclustering.frequency import compare_all
 from tclustering.frequency import in_cluster
 from tclustering.fsp import FSP
 from tclustering.sampleSet import SampleSet
-#from tclustering.cluster import Cluster
+from tclustering.trainingSet import TrainingSet
+# from tclustering.cluster import Cluster
 
 
 # checked
@@ -243,6 +244,7 @@ class TestFsp(unittest.TestCase):
         self.assertEqual(pattern_clo.get_result(), [['A', 'E', 'F'], ['A', 'C', 'D', 'F']])
 
 
+# checked
 class TestSampleSet(unittest.TestCase):
 
     def test_sample_set(self):
@@ -252,6 +254,20 @@ class TestSampleSet(unittest.TestCase):
         self.assertEqual(eventlog[0], sample_set[0])
         self.assertEqual(eventlog[3], sample_set[1])
         self.assertEqual(eventlog[5], sample_set[2])
+
+
+# checked
+class TestTrainingSet(unittest.TestCase):
+
+    def test_training_set(self):
+        eventlog = xes_importer.apply(os.path.join(os.getcwd(), 'training', 'running-example.xes'))
+        sample = SampleSet(eventlog, [0, 3, 5])
+        sample_set = sample.get_sample_set()
+        training_set_help = TrainingSet(sample_set)
+        training_set = training_set_help.get_training_set()
+        self.assertEqual(len(training_set), 2)
+        self.assertTrue(training_set[0] in sample_set)
+        self.assertTrue(training_set[1] in sample_set)
 
 
 '''
