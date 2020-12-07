@@ -2,11 +2,11 @@ import os
 from pathlib import Path
 from pm4py.objects.log.importer.xes import importer as xes_importer
 from pm4py.objects.log.util import func
-from tclustering.fsp import FSP
-from tclustering.labeling import Labeling
-from tclustering.sampleSet import SampleSet
-from tclustering.trainingSet import TrainingSet
-from tclustering.frequency import in_cluster
+from trace_clustering.tclustering.fsp import FSP
+from trace_clustering.tclustering.labeling import Labeling
+from trace_clustering.tclustering.sampleSet import SampleSet
+from trace_clustering.tclustering.trainingSet import TrainingSet
+from trace_clustering.tclustering.frequency import in_cluster
 
 
 class Cluster:

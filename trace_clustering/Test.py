@@ -1,10 +1,10 @@
 import unittest
 import os
 from pm4py.objects.log.importer.xes import importer as xes_importer
-from tclustering import frequency as f
-from tclustering.fsp import FSP
-from tclustering.sampleSet import SampleSet
-from tclustering.trainingSet import TrainingSet
+from trace_clustering.tclustering import frequency as f
+from trace_clustering.tclustering.fsp import FSP
+from trace_clustering.tclustering.sampleSet import SampleSet
+from trace_clustering.tclustering.trainingSet import TrainingSet
 # from tclustering.cluster import Cluster
 
 
