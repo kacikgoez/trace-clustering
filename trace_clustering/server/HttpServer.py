@@ -88,7 +88,7 @@ def tableJSON():
 
 
 def run_server(p_debug=False):
-    app.run(debug=p_debug)
+    app.run(debug=p_debug, port=5001)
 
 
 def json_error(msg):
@@ -120,3 +120,4 @@ def session_isset(key):
         return True
     except KeyError:
         return False
+
