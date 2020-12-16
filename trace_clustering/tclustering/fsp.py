@@ -23,7 +23,7 @@ class FSP:
         self.spmf = Spmf(algorithm_name,
                          input_filename=self.input_file,
                          output_filename=self.output_file, arguments=arguments,
-                         spmf_bin_location_dir=str(self.cur_path.parent))
+                         spmf_bin_location_dir=str(self.cur_path.parent.parent.parent))
         self.spmf.run()
         self.result = self.output_to_array(self.output_file)
 

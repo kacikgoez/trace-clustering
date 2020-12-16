@@ -7,7 +7,7 @@ from trace_clustering.tclustering.labeling import Labeling
 from trace_clustering.tclustering.sampleSet import SampleSet
 from trace_clustering.tclustering.trainingSet import TrainingSet
 from trace_clustering.tclustering.frequency import in_cluster
-
+from trace_clustering.tclustering.logFunc import LogFunc
 
 class Cluster:
 
@@ -26,10 +26,11 @@ class Cluster:
                     third element - threshold of the closed sequence pattern
     """
 
-    def __init__(self, log, traces, file_path, labeling_attributes, support, algorithm_names):
+    def __init__(self, file_path, log, traces, labeling_attributes, support, algorithm_names):
+
         self.eventlog = xes_importer.apply(log)
-        sample_set = SampleSet(self.eventlog, traces)
-        training_set = TrainingSet(sample_set.get_sample_set())
+        self.sample_set = SampleSet(self.eventlog, traces)
+        training_set = TrainingSet(self.sample_set.get_sample_set())
         self.labeling_training_set = Labeling(training_set.get_training_set(), labeling_attributes)
         self.labeling_eventlog = Labeling(self.eventlog, labeling_attributes)
         sp_len_one = FSP(file_path, algorithm_names[0],
@@ -43,29 +44,11 @@ class Cluster:
         self.pattern_clo = sp_clo.get_result()
         self.pattern = [self.pattern_len_one, self.pattern_len_two, self.pattern_clo]
 
+    def get_sample_set(self):
+        return self.sample_set
+
     def get_clustering(self, threshold_score):
-        clustering = self.choose(self.eventlog, in_cluster(self.pattern, self.labeling_eventlog.get_eventlog_label(),
+        clustering = LogFunc.choose(self.eventlog, in_cluster(self.pattern, self.labeling_eventlog.get_eventlog_label(),
                                                            threshold_score))
         return clustering
 
-    @staticmethod
-    def get_log_as_array(path):
-        if os.path.isfile(path):
-            traces = []
-            log = xes_importer.apply(path)
-            for trace in log:
-                inner = []
-                for event in trace:
-                    events = {}
-                    for action in event:
-                        events[action] = str(event[action])
-                    inner.append(events)
-                traces.append(inner)
-            return traces
-        else:
-            raise Exception("LogNotFound", "Log was not found")
-
-    @staticmethod
-    def choose(eventlog, cluster_bool):
-        log = func.filter_(lambda t: cluster_bool(t), eventlog)
-        return log

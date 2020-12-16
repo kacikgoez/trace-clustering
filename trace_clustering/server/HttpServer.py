@@ -1,13 +1,17 @@
 import sys
 
+sys.path.append("..")
+
 import os
 import time
 import random
 
 from flask import Flask, session, json, request, render_template, redirect
-from trace_clustering.tclustering import cluster as c
+from pm4py.objects.log.importer.xes import importer as xes_importer
 
-sys.path.append("..")
+from trace_clustering.tclustering.cluster import Cluster
+from trace_clustering.tclustering.measurements import Measurements
+from trace_clustering.tclustering.logFunc import LogFunc
 
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), "templates"))
 app.config["UPLOAD_FOLDER"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), "uploads")
@@ -16,11 +20,12 @@ app.secret_key = 'Abraham Lincoln was the president of the United States'
 
 @app.route('/')
 def root():
+    session.clear()
     return render_template("index.html")
 
 
 @app.route('/upload', methods=['GET', 'POST'])
-def uploadXES():
+def upload_xes():
     if request.method == "POST":
         if 'file' not in request.files:
             return json_error("No file in request")
@@ -28,7 +33,7 @@ def uploadXES():
         if file.filename == '':
             return json_error("No selected file")
         if file and check_file_type(file.filename):
-            filename = str(int(round(time.time() * 1000))) + "-" + str(random.randint(100, 999)) + ".xes"
+            filename = str(int(round(time.time() * 1000))) + ".xes"
             fpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(fpath)
             # algo, params, label, file_path
@@ -48,7 +53,6 @@ def sample():
         ):
             session["selected"] = json.loads(request.form.get("selected"))
             session["thresholds"] = json.loads(request.form.get("thresholds"))
-            print(session["thresholds"])
             session["labels"] = json.loads(request.form.get("labels"))
             return redirect('result')
         return render_template('sample.html')
@@ -57,6 +61,8 @@ def sample():
 
 @app.route('/select', methods=['GET', 'POST'])
 def select():
+    if not session_isset("xes"):
+        return redirect("error")
     return render_template('select.html')
 
 
@@ -68,10 +74,25 @@ def result():
             and session_isset("labels")
             and session_isset("xes")
     ):
-        fsp1 = c.Cluster(session["xes"], session["selected"], session["labels"], 0.8, ["CloFast", "SPAM", "SPAM"],
-                         session["thresholds"])
-        return json_response(fsp1.clustering)
+        c_obj = Cluster(get_path("spmf"), session["xes"], session["selected"], session["labels"], 0.8, ["CloFast", "SPAM", "SPAM"])
+        cluster = c_obj.get_clustering(session["thresholds"])
+        samples = (c_obj.get_sample_set()).get_sample_log()
+
+        print("Result")
+        measure = dict()
+        measure["recall"] = Measurements.recall(samples, cluster)
+        measure["precision"] = Measurements.precision(samples, cluster)
+        measure["f1"] = Measurements.f1measure(samples, cluster)
+
+        bundle = {"measures" : measure, "cluster" : LogFunc.get_log_as_array(cluster)}
+
+        return json_response(bundle)
     return redirect("error")
+
+
+@app.route('/results', methods=['GET', 'POST'])
+def results():
+    return render_template('result.html')
 
 
 @app.route('/error')
@@ -80,11 +101,21 @@ def error():
 
 
 @app.route('/table/json')
-def tableJSON():
+def table_json():
     if session_isset('xes'):
-        return json_response(c.Cluster.get_log_as_array(session['xes']))
+        log = LogFunc.get_log_as_array(xes_importer.apply(session['xes']))
+        return json_response(log)
     else:
         return json_error("No session")
+
+
+@app.route('/lib/bootstrap')
+def provide_bootstrap():
+    return app.response_class(response=render_template("js/bootstrap-4.5.2.min.js"), mimetype="text/javascript")
+
+@app.route('/lib/jquery')
+def provide_jquery():
+    return app.response_class(response=render_template("js/jquery-3.5.1.min.js"), mimetype="text/javascript")
 
 
 def run_server(p_debug=False):
@@ -116,8 +147,15 @@ def form_isset(key):
 
 def session_isset(key):
     try:
-        # value = session[key]
+        if session[key] is None:
+            return False
         return True
     except KeyError:
         return False
 
+def get_path(to):
+    to = to.lower()
+    if to == "upload":
+        return os.path.join(os.path.dirname(os.path.realpath(__file__)), "uploads")
+    elif to == "spmf":
+        return os.path.join(os.path.dirname(os.path.realpath(__file__)), "uploads", "processed")
