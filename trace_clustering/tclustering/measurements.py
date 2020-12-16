@@ -24,9 +24,8 @@ class Measurements:
         """
         result = list()
         for i in computed_log:
-            for j in sample_set:
-                if i == j:
-                    result.append(i)
+            if i in sample_set:
+                result.append(i)
         return result
 
     @staticmethod
