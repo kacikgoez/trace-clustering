@@ -7,22 +7,21 @@ class Measurements:
 
     @staticmethod
     def recall(sample_set, computed_log):
-        '''
+        """
             @param sample_set: Sample Set selected by user
             @param computed_log: Cluster computed by the Algorithm
             returns the recall value of the computed log
-        '''
+        """
         intsct = Measurements.intersection(sample_set, computed_log)
         return len(intsct)/len(sample_set)
 
-
     @staticmethod
     def intersection(sample_set, computed_log):
-        '''
+        """
             @param sample_set: Sample Set selected by user
             @param computed_log: Cluster computed by the Algorithm
             returns mutual traces found in both logs
-        '''
+        """
         result = list()
         for i in computed_log:
             for j in sample_set:
@@ -30,36 +29,23 @@ class Measurements:
                     result.append(i)
         return result
 
-
     @staticmethod
     def precision(sample_set, computed_log):
-        '''
+        """
             @param sample_set: Sample Set selected by user
             @param computed_log: Cluster computed by the Algorithm
             returns the precision value of the computed log
-        '''
+        """
         intsct = Measurements.intersection(sample_set, computed_log)
         return len(intsct) / len(computed_log)
 
     @staticmethod
     def f1measure(sample_set, computed_log):
-        '''
+        """
             @param sample_set: Sample Set selected by user
             @param computed_log: Cluster computed by the Algorithm
             returns the f1measure value of the computed log
-        '''
-        numerator = precision(sample_set,computed_log) * recall(sample_set, computed_log)
-        denominator = recall(sample_set,computed_log) + precision(sample_set, computed_log)
+        """
+        numerator = Measurements.precision(sample_set, computed_log) * Measurements.recall(sample_set, computed_log)
+        denominator = Measurements.recall(sample_set, computed_log) + Measurements.precision(sample_set, computed_log)
         return 2*numerator / denominator
-    
-
-
-
-
-
-
-
-
-
-
-
