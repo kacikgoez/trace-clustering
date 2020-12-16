@@ -17,7 +17,7 @@ class Measurements:
 
 
     @staticmethod
-    def intersection(sample_set computed_log):
+    def intersection(sample_set, computed_log):
         '''
             @param sample_set: Sample Set selected by user
             @param computed_log: Cluster computed by the Algorithm
