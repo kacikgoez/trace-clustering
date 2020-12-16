@@ -52,3 +52,17 @@ class Cluster:
                                                            threshold_score))
         return clustering
 
+    @staticmethod
+    def get_log_as_array(log):
+        traces = list()
+        for trace in log:
+            inner = []
+            for event in trace:
+                events = {}
+                for action in event:
+                     events[action] = str(event[action])
+                inner.append(events)
+            traces.append(inner)
+        return traces
+
+

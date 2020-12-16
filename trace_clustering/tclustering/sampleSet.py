@@ -13,7 +13,7 @@ class SampleSet:
         return self.sampleSet
 
     def get_sample_log(self):
-        return self.sampleSet
+        return self.sampleLog
 
     # eventlog should be imported as xes_importer.apply(eventlog)
     @staticmethod
@@ -27,7 +27,7 @@ class SampleSet:
     @staticmethod
     def sample_as_log(eventlog, traces):
         cluster_bool = list()
-        for i in eventlog:
+        for i in range(len(eventlog)):
             if i in traces:
                 cluster_bool.append(True)
             else:

@@ -24,7 +24,7 @@
 			box-shadow:  0px 4px  5px #CCC;
 			z-index: 999;
 		}
-		
+
 		#custom-file-submit {
 			display: none;
 		}
@@ -41,14 +41,14 @@
 			cursor: pointer;
 		}
 
-		#navbar input, select {
+		input[type=number] {
 		    display: inline-block;
 		    width: 200px;
 		    padding: 5px;
 		    margin: 5px;
 		    vertical-align: middle;
 		}
-		
+
 		/*table {
 			margin: 10px 0px;
 			width: 500px;
@@ -108,13 +108,6 @@
 			margin: 5px;
 		}
 
-		*[data-selected="true"]:nth-child(even){
-			background-color: #DDFFDD;
-		}
-
-		*[data-selected="true"]:nth-child(odd){
-			background-color: #AAFFAA;
-		}
 
 		*[data-selected="false"]:nth-child(even){
 			background-color: #FFF;
@@ -124,69 +117,39 @@
 			background-color: #F8F8F8;
 		}
 
-		#label *[data-marked="true"] {
-			background-color: #DDFFDD;
-		}
-
-		#label *[data-marked="false"] {
-			background-color: #FFF;
-		}
 
 	</style>
 </head>
 <body>
 	<nav id="navbar">
 		<center>
-			<select name="closed" id="closed">
-			  <option value="clofast">CloFast</option>
-			  <option value="clofast">CloFast</option>
-			</select>
-			<select name="len1" id="len1">
-			  <option value="spam">SPAM</option>
-			  <option value="spam">SPAM</option>
-			</select>
-			<select name="len2" id="len2">
-			  <option value="spam">SPAM</option>
-			  <option value="spam">SPAM</option>
-			</select>
+			<input type="number" id="clofast" name="clofast" placeholder="CloFast threshold [0,1]" min="0" max="1" step="0.01">
+			<input type="number" id="len1" name="len1" placeholder="SPAM len. 1 threshold [0,1]" min="0" max="1"  step="0.01">
+			<input type="number" id="len2" name="len2" placeholder="SPAM len. 2 threshold [0,1]" min="0" max="1"  step="0.01">
 		</center>
 	</nav>
 	<main>
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 text-center">
-					<h1 id="title">Trace Clustering</h1>
+					<h1 id="title">Result</h1>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<h4>Select the attributes of the labeling function by clicking</h4>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<div id="label"></div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<h4 id="title">Select sampling set</h4>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<div id="table" class="table table-reponsive">
-						
-					</div>
+			<div id="result" class="col-lg-12 text-center">
+				<h4 class="todeletion">Please set the thresholds and submit the content</h4>
+				<div id="pre"></div>
+				<hr>
+				<div id="table" class="table table-reponsive">
+
 				</div>
 			</div>
 		</div>
 	</main>
 	<footer id="footer">
 		<center>
-			<a href="/results" class="btn btn-success" id="submit">Submit</a>
+			<button type="button" class="btn btn-success" id="submit">Submit</button>
 		</center>
-		</footer>
+	</footer>
 	<script src="/lib/jquery"></script>
 	<script src="/lib/bootstrap" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 	<script type="text/javascript">
@@ -225,45 +188,15 @@
 			}
 
 			function read(addr){
-				if(document.cookie != ""){
-					var cur = JSON.parse(document.cookie);
-					if(cur[addr] != undefined){
-						return cur[addr];
-					}
+				var cur = JSON.parse(document.cookie);
+				if(cur[addr] != undefined){
+					return cur[addr];
 				}
 				return [];
 			}
 
-			$.get("/table/json", function(data){
-				displayTable(data);
-			});
-
-			$(document).on('click', '.markable', function(event) {
-				var table = $(event.target).closest("tbody");
-			 	if(table.attr("data-selected") == "false"){
-					save("table", parseInt(table.attr("nth-element")));
-					table.attr("data-selected", "true");  
-				} else {
-					remove("table", parseInt(table.attr("nth-element")));
-					table.attr("data-selected", "false");  
-				}
-			});
-
-			$(document).on('click', '#label th', function(event) {
-				if($(event.target).attr("data-marked") == undefined || $(event.target).attr("data-marked") == "false"){
-					$(event.target).attr("data-marked", "true");
-					save("label", $(event.target).text());
-				} else {
-					$(event.target).attr("data-marked", "false");
-					remove("label", $(event.target).text());
-				}
-			});
-
-			$("select").change(function(event){
-				alert(1);
-			});
-
 			function displayTable(log){
+				console.log(log);
 				var table = document.createElement("table");
 				var content = document.createElement("table");
 				var pretable = read("table")
@@ -313,12 +246,6 @@
 					var div = document.createElement("tbody");
 					div.setAttribute("nth-element", i++);
 
-					if(pretable.includes(i-1)){
-						div.setAttribute("data-selected", "true");
-					} else {
-						div.setAttribute("data-selected", "false");
-					}
-
 					div.setAttribute("class", "markable");
 
 					for(evnt in log[trace]){
@@ -334,18 +261,83 @@
 							var td = document.createElement("td");
 							td.setAttribute("scope", "col");
 							$(td).text(log[trace][evnt][act]);
-							row.appendChild(td)	
+							row.appendChild(td)
 						}
 
 						div.appendChild(row);
 					}
 
 					content.appendChild(div);
-					
+
 				}
 
 				$("#table").append(content);
 			}
+
+			$("#submit").click(function(){
+				var thresholds = {};
+				var marked = read("table");
+				var m_labels = read("label");
+
+				console.log(marked);
+				console.log(m_labels);
+
+				thresholds = [ parseFloat($("#clofast").val()), parseFloat($("#len1").val()), parseFloat($("#len2").val())];
+
+				if(isNaN(parseFloat($("#clofast").val())) || isNaN(parseFloat($("#len1").val())) || isNaN(parseFloat($("#len2").val()))){
+					alert("Please fill all the thresholds");
+					return 0;
+				}
+
+				if(m_labels.length == 0){
+					alert("Please select at least one attribute for the labeling function");
+					return 0;
+				} else {
+					alert(parseFloat($("#clofast").val()));
+				}
+
+				if(marked.length == 0){
+					alert("Please select at least one sample");
+					return 0;
+				}
+
+				var data = {
+					"selected" : JSON.stringify(marked),
+					"thresholds" : JSON.stringify(thresholds),
+					"labels" : JSON.stringify(m_labels)
+				};
+
+				$.ajax({
+				  type: "POST",
+				  url: "/sample",
+				  data: data,
+				  success: function(data){
+
+				  	$(".todeletion").hide();
+
+				  	var clusters = data["cluster"];
+				  	var measures = data["measures"];
+
+				  	var f1 = measures["f1"];
+				  	var recall = measures["recall"];
+				  	var precision = measures["precision"];
+
+				  	var f1_title = document.createElement("b");
+				  	var rc_title = document.createElement("b");
+				  	var pre_title = document.createElement("b");
+
+					f1_title.innerHTML = "F1: " + f1 + " - ";
+					rc_title.innerHTML = "Recall: " + recall + " - ";
+					pre_title.innerHTML = "Precision: " + precision;
+
+					$("#pre").append(f1_title);
+					$("#pre").append(rc_title);
+					$("#pre").append(pre_title);
+
+					displayTable(clusters);
+				  }
+				});
+			});
 
 		});
 	</script>

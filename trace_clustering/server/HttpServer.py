@@ -59,6 +59,7 @@ def sample():
     return redirect("error")
 
 
+
 @app.route('/select', methods=['GET', 'POST'])
 def select():
     if not session_isset("xes"):
@@ -78,7 +79,6 @@ def result():
         cluster = c_obj.get_clustering(session["thresholds"])
         samples = (c_obj.get_sample_set()).get_sample_log()
 
-        print("Result")
         measure = dict()
         measure["recall"] = Measurements.recall(samples, cluster)
         measure["precision"] = Measurements.precision(samples, cluster)
