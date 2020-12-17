@@ -137,6 +137,7 @@
 <body>
 	<nav id="navbar">
 		<center>
+			<input type="number" id="support" name="support" placeholder="Support [0,1]" min="0" max="1" step="0.01">
 			<select name="closed" id="closed">
 			  <option value="clofast">CloFast</option>
 			  <option value="clofast">CloFast</option>
@@ -193,6 +194,23 @@
 
 		$(document).ready(function(){
 
+			if(document.cookie != ""){
+				var cur = JSON.parse(document.cookie);
+				if(cur["support"] != undefined){
+					$("#support").val(cur["support"][0]);
+				}
+				if(cur["closed"] != undefined){
+					$("#closed").val(cur["closed"][0]);
+				}
+				if(cur["len1"] != undefined){
+					$("#len1").val(cur["len1"][0]);
+				}
+				if(cur["len2"] != undefined){
+					$("#len2").val(cur["len2"][0]);
+				}
+			}
+
+
 			function save(addr, val){
 				console.log("Y");
 				if(document.cookie != ""){
@@ -219,6 +237,15 @@
 							inner.push(cur[addr][i]);
 						}
 					}
+					cur[addr] = inner;
+				}
+				document.cookie = JSON.stringify(cur);
+			}
+
+			function clear(addr){
+				var cur = JSON.parse(document.cookie);
+				if(cur[addr] != undefined){
+					var inner = [];
 					cur[addr] = inner;
 				}
 				document.cookie = JSON.stringify(cur);
@@ -260,7 +287,12 @@
 			});
 
 			$("select").change(function(event){
-				alert(1);
+				console.log(event.target);
+			});
+
+			$("#support").change(function(event){
+				clear("support");
+				save("support", $(event.target).val());
 			});
 
 			function displayTable(log){

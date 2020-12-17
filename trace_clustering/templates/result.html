@@ -92,6 +92,15 @@
 		    position: relative;
 		}
 
+		textarea {
+			display: block;
+			height: 300px;
+			width: 700px;
+			padding: 20px;
+			margin-bottom: 50px;
+			background-color: #333;
+			color: white;
+		}
 
 		#footer {
 			position: fixed;
@@ -123,9 +132,9 @@
 <body>
 	<nav id="navbar">
 		<center>
-			<input type="number" id="clofast" name="clofast" placeholder="CloFast threshold [0,1]" min="0" max="1" step="0.01">
-			<input type="number" id="len1" name="len1" placeholder="SPAM len. 1 threshold [0,1]" min="0" max="1"  step="0.01">
-			<input type="number" id="len2" name="len2" placeholder="SPAM len. 2 threshold [0,1]" min="0" max="1"  step="0.01">
+			<input type="number" id="clofast" name="clofast" placeholder="CloFast threshold" min="0"  step="1">
+			<input type="number" id="len1" name="len1" placeholder="SPAM len. 1 threshold" min="0"   step="1">
+			<input type="number" id="len2" name="len2" placeholder="SPAM len. 2 threshold" min="0"  step="1">
 		</center>
 	</nav>
 	<main>
@@ -155,6 +164,82 @@
 	<script type="text/javascript">
 
 		$(document).ready(function(){
+
+				var thresholds = {};
+				var marked = read("table");
+				var m_labels = read("label");
+				var support = read("support");
+
+				if(m_labels.length == 0){
+					alert("Please select at least one attribute for the labeling function");
+					return 0;
+				}
+
+				if(marked.length == 0){
+					alert("Please select at least one sample");
+					return 0;
+				}
+
+				if(support.length == 0 || support[0].trim() == ""){
+					alert("Please input a support between 0 and 1");
+					return 0;
+				}
+
+				var data = {
+					"support" : JSON.stringify(support),
+					"selected" : JSON.stringify(marked),
+					"thresholds" : JSON.stringify([0,0,0]),
+					"labels" : JSON.stringify(m_labels)
+				};
+
+				$.ajax({
+				  type: "POST",
+				  url: "/sample",
+				  data: data,
+				  success: function(data){
+
+				  	var patterns = data["patterns"];
+
+				  	var names = ["Length one", "Length two", "Closed FSP"];
+
+				  	var ctr = document.createElement("center");
+
+				  	$("#clofast").attr("placeholder", "CloFast [0, " + patterns[2].length + "]" );
+				  	$("#len1").attr("placeholder", "SPAM [0, " + patterns[0].length + "]" );
+				  	$("#len2").attr("placeholder", "SPAM [0, " + patterns[1].length + "]" );
+
+				  	for(var i = 0; i < patterns.length; i++){
+				  		var ta = document.createElement("textarea");
+				  		var title = document.createElement("h4");
+				  		var line = document.createElement("hr");
+				  		var line2 = document.createElement("hr");
+				  		title.innerHTML = names[i];
+				  		for(var j = 0; j < patterns[i].length; j++){
+				  			if(i != 0){
+								for(var z = 0; z < patterns[i][j].length-1; z++){
+									$(ta).append(patterns[i][j][z] + " -> ");
+								}
+
+								$(ta).append(patterns[i][j][patterns[i][j].length-1]);
+								$(ta).append("\n --------------- \n");
+							} else {
+								for(var z = 0; z < patterns[i][j].length-1; z++){
+									$(ta).append(patterns[i][j][z] + "\n --------------- \n");
+								}
+							}
+				  		}
+				  		if(i > 0) {
+				  			$(ctr).append(line2);
+				  		}
+				  		$(ctr).append(title);
+				  		$(ctr).append(line);
+				  		$(ctr).append(ta);
+				  	}
+
+					$("#table").append(ctr);
+				  }
+				});
+
 
 			function save(addr, val){
 				console.log("Y");
@@ -196,7 +281,7 @@
 			}
 
 			function displayTable(log){
-				console.log(log);
+
 				var table = document.createElement("table");
 				var content = document.createElement("table");
 				var pretable = read("table")
@@ -278,9 +363,7 @@
 				var thresholds = {};
 				var marked = read("table");
 				var m_labels = read("label");
-
-				console.log(marked);
-				console.log(m_labels);
+				var support = read("support");
 
 				thresholds = [ parseFloat($("#clofast").val()), parseFloat($("#len1").val()), parseFloat($("#len2").val())];
 
@@ -299,7 +382,13 @@
 					return 0;
 				}
 
+				if(support.length == 0 || support[0].trim() == ""){
+					alert("Please input a support between 0 and 1");
+					return 0;
+				}
+
 				var data = {
+					"support" : JSON.stringify(support),
 					"selected" : JSON.stringify(marked),
 					"thresholds" : JSON.stringify(thresholds),
 					"labels" : JSON.stringify(m_labels)
@@ -311,7 +400,8 @@
 				  data: data,
 				  success: function(data){
 
-				  	$(".todeletion").hide();
+				  	$("#pre").html("");
+				  	$("#table").html("");
 
 				  	var clusters = data["cluster"];
 				  	var measures = data["measures"];
@@ -331,6 +421,8 @@
 					$("#pre").append(f1_title);
 					$("#pre").append(rc_title);
 					$("#pre").append(pre_title);
+
+				  	$(".todeletion").hide();
 
 					displayTable(clusters);
 				  }

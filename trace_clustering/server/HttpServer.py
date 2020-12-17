@@ -54,6 +54,7 @@ def sample():
             session["selected"] = json.loads(request.form.get("selected"))
             session["thresholds"] = json.loads(request.form.get("thresholds"))
             session["labels"] = json.loads(request.form.get("labels"))
+            session["support"] = json.loads(request.form.get("support"))
             return redirect('result')
         return render_template('sample.html')
     return redirect("error")
@@ -74,8 +75,9 @@ def result():
             and session_isset("thresholds")
             and session_isset("labels")
             and session_isset("xes")
+            and session_isset("support")
     ):
-        c_obj = Cluster(get_path("spmf"), session["xes"], session["selected"], session["labels"], 0.8, ["CloFast", "SPAM", "SPAM"])
+        c_obj = Cluster(get_path("spmf"), session["xes"], session["selected"], session["labels"], session["support"][0], ["CloFast", "SPAM", "SPAM"])
         cluster = c_obj.get_clustering(session["thresholds"])
         samples = (c_obj.get_sample_set()).get_sample_log()
 
@@ -84,7 +86,7 @@ def result():
         measure["precision"] = Measurements.precision(samples, cluster)
         measure["f1"] = Measurements.f1measure(samples, cluster)
 
-        bundle = {"measures" : measure, "cluster" : LogFunc.get_log_as_array(cluster)}
+        bundle = {"measures" : measure, "cluster" : LogFunc.get_log_as_array(cluster), "patterns" :  c_obj.get_pattern()}
 
         return json_response(bundle)
     return redirect("error")

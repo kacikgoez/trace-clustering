@@ -44,6 +44,9 @@ class Cluster:
         self.pattern_clo = sp_clo.get_result()
         self.pattern = [self.pattern_len_one, self.pattern_len_two, self.pattern_clo]
 
+    def get_pattern(self):
+        return self.pattern
+
     def get_sample_set(self):
         return self.sample_set
 
