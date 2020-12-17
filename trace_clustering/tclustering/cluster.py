@@ -1,7 +1,12 @@
 import os
 from pathlib import Path
 from pm4py.objects.log.importer.xes import importer as xes_importer
-from pm4py.objects.log.util import func
+
+import pandas as pd
+from pm4py.objects.log.util import dataframe_utils
+from pm4py.objects.conversion.log import converter as log_converter
+
+
 from trace_clustering.tclustering.fsp import FSP
 from trace_clustering.tclustering.labeling import Labeling
 from trace_clustering.tclustering.sampleSet import SampleSet
@@ -27,8 +32,7 @@ class Cluster:
     """
 
     def __init__(self, file_path, log, traces, labeling_attributes, support, algorithm_names):
-
-        self.eventlog = xes_importer.apply(log)
+        self.eventlog = self.process_log(log)
         self.sample_set = SampleSet(self.eventlog, traces)
         training_set = TrainingSet(self.sample_set.get_sample_set())
         self.labeling_training_set = Labeling(training_set.get_training_set(), labeling_attributes)
@@ -43,6 +47,10 @@ class Cluster:
         self.pattern_len_two = sp_len_two.get_result()
         self.pattern_clo = sp_clo.get_result()
         self.pattern = [self.pattern_len_one, self.pattern_len_two, self.pattern_clo]
+
+    @staticmethod
+    def is_xes(filename):
+        return filename.lower().endswith('.xes')
 
     def get_pattern(self):
         return self.pattern
@@ -68,4 +76,13 @@ class Cluster:
             traces.append(inner)
         return traces
 
+    @staticmethod
+    def process_log(log):
+        if Cluster.is_xes(log):
+            eventlog = xes_importer.apply(log)
+        else:
+            print(log)
+            log_csv = pd.read_csv(log, sep=',')
+            eventlog = log_converter.apply(log_csv)
+        return eventlog
 

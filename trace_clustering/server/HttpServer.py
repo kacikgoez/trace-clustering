@@ -33,7 +33,10 @@ def upload_xes():
         if file.filename == '':
             return json_error("No selected file")
         if file and check_file_type(file.filename):
-            filename = str(int(round(time.time() * 1000))) + ".xes"
+            if Cluster.is_xes(file.filename):
+                filename = str(int(round(time.time() * 1000))) + ".xes"
+            else:
+                filename = str(int(round(time.time() * 1000))) + ".csv"
             fpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(fpath)
             # algo, params, label, file_path
@@ -105,7 +108,7 @@ def error():
 @app.route('/table/json')
 def table_json():
     if session_isset('xes'):
-        log = LogFunc.get_log_as_array(xes_importer.apply(session['xes']))
+        log = Cluster.get_log_as_array(Cluster.process_log(session['xes']))
         return json_response(log)
     else:
         return json_error("No session")
@@ -136,8 +139,7 @@ def json_response(rsp):
 
 def check_file_type(filename):
     # Checks file type, XES is currently the only one that's allowed
-    return filename.lower().endswith('.xes')
-
+    return filename.lower().endswith(('.xes', '.csv'))
 
 def form_isset(key):
     try:
