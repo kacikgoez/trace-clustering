@@ -1,0 +1,3 @@
+check ticket | decide | #SUP: 2
+register request | check ticket | #SUP: 2
+register request | decide | #SUP: 2

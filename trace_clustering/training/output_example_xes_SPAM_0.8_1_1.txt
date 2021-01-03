@@ -1,5 +1,0 @@
-A | #SUP: 3
-C | #SUP: 3
-D | #SUP: 3
-E | #SUP: 3
-F | #SUP: 3

@@ -1,3 +1,5 @@
+# install also java
 flask
 spmf
 pm4py
+scikit-learn
