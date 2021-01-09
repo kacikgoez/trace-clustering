@@ -1,0 +1,4 @@
+flask
+spmf 1.4
+pm4py
+scikit-learn
