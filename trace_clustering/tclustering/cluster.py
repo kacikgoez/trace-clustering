@@ -1,11 +1,8 @@
-import os
 from pathlib import Path
 from pm4py.objects.log.importer.xes import importer as xes_importer
 
 import pandas as pd
-from pm4py.objects.log.util import dataframe_utils
 from pm4py.objects.conversion.log import converter as log_converter
-
 
 from fsp import FSP
 from labeling import Labeling
@@ -16,7 +13,6 @@ from logFunc import LogFunc
 
 
 class Cluster:
-
     """
     eventlog - .xes file
     traces - list of traces id
@@ -61,7 +57,7 @@ class Cluster:
 
     def get_clustering(self, threshold_score):
         clustering = LogFunc.choose(self.eventlog, in_cluster(self.pattern, self.labeling_eventlog.get_eventlog_label(),
-                                                           threshold_score))
+                                                              threshold_score))
         return clustering
 
     @staticmethod
@@ -72,7 +68,7 @@ class Cluster:
             for event in trace:
                 events = {}
                 for action in event:
-                     events[action] = str(event[action])
+                    events[action] = str(event[action])
                 inner.append(events)
             traces.append(inner)
         return traces
@@ -86,4 +82,3 @@ class Cluster:
             log_csv = pd.read_csv(log, sep=',')
             eventlog = log_converter.apply(log_csv)
         return eventlog
-

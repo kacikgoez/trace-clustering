@@ -212,7 +212,8 @@ class TestFsp(unittest.TestCase):
         labeling_training_set = [['A', 'X', 'B', 'C', 'E', 'D', 'F'], ['A', 'E', 'C', 'Y', 'D', 'F'],
                                  ['A', 'Z', 'C', 'D', 'B', 'E', 'F']]
         file_path = FSP.write_text_input_file(labeling_training_set,
-                                              os.path.join(os.getcwd(), 'training/server/uploads'), 'example.xes', ['CloFast', 0.8])
+                                              os.path.join(os.getcwd(), 'training/server/uploads'), 'example.xes',
+                                              ['CloFast', 0.8])
         with open(file_path, 'r') as file:
             result_text = file.read()
             file.close()
