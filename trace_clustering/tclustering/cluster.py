@@ -7,12 +7,13 @@ from pm4py.objects.log.util import dataframe_utils
 from pm4py.objects.conversion.log import converter as log_converter
 
 
-from trace_clustering.tclustering.fsp import FSP
-from trace_clustering.tclustering.labeling import Labeling
-from trace_clustering.tclustering.sampleSet import SampleSet
-from trace_clustering.tclustering.trainingSet import TrainingSet
-from trace_clustering.tclustering.frequency import in_cluster
-from trace_clustering.tclustering.logFunc import LogFunc
+from fsp import FSP
+from labeling import Labeling
+from sampleSet import SampleSet
+from trainingSet import TrainingSet
+from frequency import in_cluster
+from logFunc import LogFunc
+
 
 class Cluster:
 

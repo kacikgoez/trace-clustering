@@ -1,4 +1,4 @@
-from trace_clustering.tclustering.logFunc import LogFunc
+from logFunc import LogFunc
 
 class SampleSet:
 
