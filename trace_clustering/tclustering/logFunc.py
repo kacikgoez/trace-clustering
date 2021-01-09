@@ -1,5 +1,6 @@
 from pm4py.objects.log.util import func
 
+
 class LogFunc:
 
     @staticmethod

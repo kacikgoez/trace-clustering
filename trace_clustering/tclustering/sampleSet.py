@@ -1,4 +1,5 @@
-from logFunc import LogFunc
+from tclustering.logFunc import LogFunc
+
 
 class SampleSet:
 
@@ -22,7 +23,6 @@ class SampleSet:
         for i in list_traces_num:
             sample_log.append(eventlog[i])
         return sample_log
-
 
     @staticmethod
     def sample_as_log(eventlog, traces):
