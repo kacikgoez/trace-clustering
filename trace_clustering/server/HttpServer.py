@@ -124,7 +124,7 @@ def provide_jquery():
 
 
 def run_server(p_debug=False):
-    app.run(debug=p_debug, port=5001)
+    app.run(debug=p_debug, port=5001, host ='0.0.0.0')
 
 
 def json_error(msg):
