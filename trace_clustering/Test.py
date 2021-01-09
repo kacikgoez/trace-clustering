@@ -5,7 +5,6 @@ from tclustering import frequency as f
 from tclustering.fsp import FSP
 from tclustering.sampleSet import SampleSet
 from tclustering.trainingSet import TrainingSet
-# from tclustering.cluster import Cluster
 
 
 # checked
@@ -213,7 +212,7 @@ class TestFsp(unittest.TestCase):
         labeling_training_set = [['A', 'X', 'B', 'C', 'E', 'D', 'F'], ['A', 'E', 'C', 'Y', 'D', 'F'],
                                  ['A', 'Z', 'C', 'D', 'B', 'E', 'F']]
         file_path = FSP.write_text_input_file(labeling_training_set,
-                                              os.path.join(os.getcwd(), 'training'), 'example.xes', ['CloFast', 0.8])
+                                              os.path.join(os.getcwd(), 'training/server/uploads'), 'example.xes', ['CloFast', 0.8])
         with open(file_path, 'r') as file:
             result_text = file.read()
             file.close()
@@ -228,11 +227,11 @@ class TestFsp(unittest.TestCase):
     def test_result(self):
         labeling_training_set = [['A', 'X', 'B', 'C', 'E', 'D', 'F'], ['A', 'E', 'C', 'Y', 'D', 'F'],
                                  ['A', 'Z', 'C', 'D', 'B', 'E', 'F']]
-        pattern_len_one = FSP(os.path.join(os.getcwd(), 'training'), 'SPAM',
+        pattern_len_one = FSP(os.path.join(os.getcwd(), 'training/server/uploads'), 'SPAM',
                               labeling_training_set, 'example.xes', [0.8, 1, 1])
-        pattern_len_two = FSP(os.path.join(os.getcwd(), 'training'), 'SPAM',
+        pattern_len_two = FSP(os.path.join(os.getcwd(), 'training/server/uploads'), 'SPAM',
                               labeling_training_set, 'example.xes', [0.8, 2, 2])
-        pattern_clo = FSP(os.path.join(os.getcwd(), 'training'), 'CloFast',
+        pattern_clo = FSP(os.path.join(os.getcwd(), 'training/server/uploads'), 'CloFast',
                           labeling_training_set, 'example.xes', [0.8])
         self.assertEqual(pattern_len_one.get_result(), [['A'], ['C'], ['D'], ['E'], ['F']])
         self.assertEqual(pattern_len_two.get_result(), [['A', 'C'], ['A', 'D'], ['A', 'E'], ['A', 'F'],
@@ -266,14 +265,5 @@ class TestTrainingSet(unittest.TestCase):
         self.assertTrue(training_set[1] in sample_set)
 
 
-'''
-class TestClustering(unittest.TestCase):
-
-    def test_clustering(self):
-        cluster = Cluster('/Users/lentz/Desktop/trace-clustering/trace_clustering/training/running-example.xes',
-                          [1, 2, 3, 4], ['Activity'], 0.8, ['SPAM', 'SPAM', 'CloFast'], [2, 1, 0])
-        self.assertEqual(cluster.clustering, [True, True, True, True, True, True])
-
-'''
 if __name__ == 'main':
     unittest.main()
