@@ -1,17 +1,15 @@
 import sys
 
-sys.path.append("..")
-
 import os
 import time
-import random
 
 from flask import Flask, session, json, request, render_template, redirect
-from pm4py.objects.log.importer.xes import importer as xes_importer
 
 from trace_clustering.tclustering.cluster import Cluster
 from trace_clustering.tclustering.measurements import Measurements
 from trace_clustering.tclustering.logFunc import LogFunc
+
+sys.path.append("..")
 
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), "templates"))
 app.config["UPLOAD_FOLDER"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), "uploads")
@@ -63,7 +61,6 @@ def sample():
     return redirect("error")
 
 
-
 @app.route('/select', methods=['GET', 'POST'])
 def select():
     if not session_isset("xes"):
@@ -80,7 +77,8 @@ def result():
             and session_isset("xes")
             and session_isset("support")
     ):
-        c_obj = Cluster(get_path("spmf"), session["xes"], session["selected"], session["labels"], session["support"][0], ["CloFast", "SPAM", "SPAM"])
+        c_obj = Cluster(get_path("spmf"), session["xes"], session["selected"], session["labels"], session["support"][0],
+                        ["CloFast", "SPAM", "SPAM"])
         cluster = c_obj.get_clustering(session["thresholds"])
         samples = (c_obj.get_sample_set()).get_sample_log()
 
@@ -89,7 +87,7 @@ def result():
         measure["precision"] = Measurements.precision(samples, cluster)
         measure["f1"] = Measurements.f1measure(samples, cluster)
 
-        bundle = {"measures" : measure, "cluster" : LogFunc.get_log_as_array(cluster), "patterns" :  c_obj.get_pattern()}
+        bundle = {"measures": measure, "cluster": LogFunc.get_log_as_array(cluster), "patterns": c_obj.get_pattern()}
 
         return json_response(bundle)
     return redirect("error")
@@ -118,13 +116,14 @@ def table_json():
 def provide_bootstrap():
     return app.response_class(response=render_template("js/bootstrap-4.5.2.min.js"), mimetype="text/javascript")
 
+
 @app.route('/lib/jquery')
 def provide_jquery():
     return app.response_class(response=render_template("js/jquery-3.5.1.min.js"), mimetype="text/javascript")
 
 
 def run_server(p_debug=False):
-    app.run(debug=p_debug, port=5001, host ='0.0.0.0')
+    app.run(debug=p_debug, port=5001, host='0.0.0.0')
 
 
 def json_error(msg):
@@ -141,6 +140,7 @@ def check_file_type(filename):
     # Checks file type, XES is currently the only one that's allowed
     return filename.lower().endswith(('.xes', '.csv'))
 
+
 def form_isset(key):
     try:
         # value = request.form.get(key)
@@ -156,6 +156,7 @@ def session_isset(key):
         return True
     except KeyError:
         return False
+
 
 def get_path(to):
     to = to.lower()
