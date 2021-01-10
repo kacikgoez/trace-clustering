@@ -403,28 +403,49 @@
 				  	$("#pre").html("");
 				  	$("#table").html("");
 
-				  	var clusters = data["cluster"];
-				  	var measures = data["measures"];
+					if(data["status"] != "error"){
+						var clusters = data["cluster"];
+						var measures = data["measures"];
 
-				  	var f1 = measures["f1"];
-				  	var recall = measures["recall"];
-				  	var precision = measures["precision"];
+						var f1 = measures["f1"];
+						var recall = measures["recall"];
+						var precision = measures["precision"];
 
-				  	var f1_title = document.createElement("b");
-				  	var rc_title = document.createElement("b");
-				  	var pre_title = document.createElement("b");
+						var xes_download = document.createElement("a");
+						var csv_download = document.createElement("a");
+						xes_download.href = "/download/xes";
+						csv_download.href = "/download/csv";
+						xes_download.className = "btn btn-info";
+						csv_download.className = "btn btn-info";
+						csv_download.style.margin = "10px";
+						xes_download.style.margin = "10px";
+						csv_download.innerHTML = "Download CSV";
+						xes_download.innerHTML = "Download XES";
 
-					f1_title.innerHTML = "F1: " + f1 + " - ";
-					rc_title.innerHTML = "Recall: " + recall + " - ";
-					pre_title.innerHTML = "Precision: " + precision;
 
-					$("#pre").append(f1_title);
-					$("#pre").append(rc_title);
-					$("#pre").append(pre_title);
+						var f1_title = document.createElement("b");
+						var rc_title = document.createElement("b");
+						var pre_title = document.createElement("b");
 
-				  	$(".todeletion").hide();
+						f1_title.innerHTML = "F1: " + f1 + " - ";
+						rc_title.innerHTML = "Recall: " + recall + " - ";
+						pre_title.innerHTML = "Precision: " + precision;
 
-					displayTable(clusters);
+
+						$("#pre").append(xes_download);
+						$("#pre").append(csv_download);
+						$("#pre").append("<br>");
+
+						$("#pre").append(f1_title);
+						$("#pre").append(rc_title);
+						$("#pre").append(pre_title);
+
+						$(".todeletion").hide();
+
+						displayTable(clusters);
+					} else {
+						alert(data["message"]);
+					}
 				  }
 				});
 			});

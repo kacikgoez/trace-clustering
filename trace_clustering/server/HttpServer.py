@@ -1,15 +1,18 @@
 import sys
 
+sys.path.append("..")
+
 import os
 import time
 
-from flask import Flask, session, json, request, render_template, redirect
+from flask import Flask, session, json, request, render_template, redirect, send_file
+
+from pm4py.objects.log.exporter.xes import exporter as xes_exporter
+from pm4py.objects.conversion.log import converter as log_converter
 
 from trace_clustering.tclustering.cluster import Cluster
 from trace_clustering.tclustering.measurements import Measurements
 from trace_clustering.tclustering.logFunc import LogFunc
-
-sys.path.append("..")
 
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), "templates"))
 app.config["UPLOAD_FOLDER"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), "uploads")
@@ -31,14 +34,16 @@ def upload_xes():
         if file.filename == '':
             return json_error("No selected file")
         if file and check_file_type(file.filename):
+            code = str(int(round(time.time() * 1000)))
             if Cluster.is_xes(file.filename):
-                filename = str(int(round(time.time() * 1000))) + ".xes"
+                filename = code + ".xes"
             else:
-                filename = str(int(round(time.time() * 1000))) + ".csv"
+                filename = code + ".csv"
             fpath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(fpath)
             # algo, params, label, file_path
             # cluster= c.Cluster([0], ["Activity","Resource"], fpath)
+            session["fwext"] = code
             session["xes"] = fpath
             return redirect('select')
 
@@ -76,6 +81,7 @@ def result():
             and session_isset("labels")
             and session_isset("xes")
             and session_isset("support")
+            and session_isset("fwext")
     ):
         c_obj = Cluster(get_path("spmf"), session["xes"], session["selected"], session["labels"], session["support"][0],
                         ["CloFast", "SPAM", "SPAM"])
@@ -85,9 +91,21 @@ def result():
         measure = dict()
         measure["recall"] = Measurements.recall(samples, cluster)
         measure["precision"] = Measurements.precision(samples, cluster)
+
+        if measure["recall"] == -1 or measure["precision"] == -1:
+            return json_error("Intersection of sample set and cluster is empty")
+
         measure["f1"] = Measurements.f1measure(samples, cluster)
 
         bundle = {"measures": measure, "cluster": LogFunc.get_log_as_array(cluster), "patterns": c_obj.get_pattern()}
+
+        xes_exporter.apply(cluster, os.path.join(os.path.dirname(os.path.realpath(__file__)), "uploads", "exp-" + session["fwext"] + ".xes"))
+
+        dataframe = log_converter.apply(cluster, variant=log_converter.Variants.TO_DATA_FRAME)
+        dataframe.to_csv(os.path.join(os.path.dirname(os.path.realpath(__file__)), "uploads", "exp-" + session["fwext"] + ".csv"))
+
+        session["download_xes"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), "uploads", "exp-" + session["fwext"] + ".xes")
+        session["download_csv"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), "uploads", "exp-" + session["fwext"] + ".csv")
 
         return json_response(bundle)
     return redirect("error")
@@ -108,6 +126,20 @@ def table_json():
     if session_isset('xes'):
         log = Cluster.get_log_as_array(Cluster.process_log(session['xes']))
         return json_response(log)
+    else:
+        return json_error("No session")
+
+@app.route('/download/xes')
+def download_xes():
+    if session_isset('download_xes'):
+        return send_file(session["download_xes"], as_attachment=True)
+    else:
+        return json_error("No session")
+
+@app.route('/download/csv')
+def download_csv():
+    if session_isset('download_csv'):
+        return send_file(session["download_csv"], as_attachment=True)
     else:
         return json_error("No session")
 

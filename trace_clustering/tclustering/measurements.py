@@ -12,6 +12,8 @@ class Measurements:
             @param computed_log: Cluster computed by the Algorithm
             returns the recall value of the computed log
         """
+        if len(sample_set) == 0:
+            return -1
         intsct = Measurements.intersection(sample_set, computed_log)
         return len(intsct)/len(sample_set)
 
@@ -35,6 +37,8 @@ class Measurements:
             @param computed_log: Cluster computed by the Algorithm
             returns the precision value of the computed log
         """
+        if len(computed_log) == 0:
+            return -1
         intsct = Measurements.intersection(sample_set, computed_log)
         return len(intsct) / len(computed_log)
 
